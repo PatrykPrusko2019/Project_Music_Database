@@ -1,5 +1,5 @@
 package com.patryk_prusko.model;
-//table albums
+
 public class Album {
 
     private int id;

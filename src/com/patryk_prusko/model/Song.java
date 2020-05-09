@@ -1,5 +1,5 @@
 package com.patryk_prusko.model;
-//table songs
+
 public class Song {
 
     private int id;

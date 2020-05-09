@@ -1,5 +1,5 @@
 package com.patryk_prusko.model;
-//table artists
+
 public class Artist {
 
     private  int id;

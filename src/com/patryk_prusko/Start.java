@@ -2,6 +2,7 @@ package com.patryk_prusko;
 
 import com.patryk_prusko.model.Artist;
 import com.patryk_prusko.model.Datasource;
+import com.patryk_prusko.model.SongArtist;
 
 import java.util.List;
 
@@ -36,7 +37,18 @@ public class Start {
         }
 
 
+        List<SongArtist> songArtists = datasource.queryArtistsForSong("Go Your Own Way", Datasource.ORDER_BY_ASC);
+        if(songArtists == null) {
+            System.out.println("Couldn't find the artist for the song");
+            return;
+        }
 
+        System.out.println("\n\n searching song name:" + " Go Your Own Way");
+        for(SongArtist artist : songArtists) {
+            System.out.println("Artist name = " + artist.getArtistName() +
+                               ", Album name = " + artist.getAlbumName() +
+                               ", Track = " + artist.getTrack());
+        }
 
         datasource.close();
     }
