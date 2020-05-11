@@ -4,6 +4,7 @@ import com.patryk_prusko.model.Artist;
 import com.patryk_prusko.model.Datasource;
 import com.patryk_prusko.model.SongArtist;
 import java.util.List;
+import java.util.Scanner;
 
 public class Start {
 
@@ -58,17 +59,28 @@ public class Start {
 
         datasource.createViewForSongArtists();
 
-        songArtists = datasource.querySongInfoView("Go Your Own Way");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the song title: ");
+        String title = scanner.nextLine(); // Go Your Own Way" or 1=1 or " -> resistant to such instructions from the console
+
+
+        songArtists = datasource.querySongInfoView(title);
+
         if(songArtists.isEmpty()) {
             System.out.println("Couldn't find the artist for the song");
             return;
         }
+
         for(SongArtist artist : songArtists) {
             System.out.println("FROM VIEW - Artist name = " + artist.getArtistName() +
                     " Album name = " + artist.getAlbumName() +
                     " Track number = " + artist.getTrack());
         }
 
+
+
         datasource.close();
+
+        //SELECT name, album, track FROM artist_list WHERE title = ? OR artist = ?
     }
 }
