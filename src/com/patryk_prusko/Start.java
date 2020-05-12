@@ -57,6 +57,7 @@ public class Start {
 
         ///////////////////////////
 
+/*
         datasource.createViewForSongArtists();
 
         Scanner scanner = new Scanner(System.in);
@@ -76,8 +77,10 @@ public class Start {
                     " Album name = " + artist.getAlbumName() +
                     " Track number = " + artist.getTrack());
         }
+*/
 
 
+        datasource.insertSong("Touch", "Grateful Dead","In The Dark", 1 ); //adds new song
 
         datasource.close();
 
