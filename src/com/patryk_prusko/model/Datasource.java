@@ -107,6 +107,10 @@ public class Datasource {
     public static final String QUERY_ALBUM = "SELECT " + COLUMN_ALBUM_ID + " FROM " +
             TABLE_ALBUMS + " WHERE " + COLUMN_ALBUM_NAME + " = ?"; //SELECT albums._id FROM albums WHERE albums.name = ?
 
+
+    public static final String QUERY_ALBUMS_BY_ARTIST_ID = "SELECT * FROM " + TABLE_ALBUMS +
+            " WHERE " + COLUMN_ALBUM_ARTIST + " = ? ORDER BY " + COLUMN_ALBUM_NAME + " COLLATE NOCASE "; // SELECT * FROM albums WHERE albums.artist = ? ORDER BY albums.name COLLATE NOCASE
+
     private Connection connection;
 
     private PreparedStatement querySongInfoView;
@@ -117,6 +121,23 @@ public class Datasource {
 
     private PreparedStatement queryArtist;
     private PreparedStatement queryAlbum;
+    private PreparedStatement queryAlbumsByArtistId;
+
+    private static Datasource instance = new Datasource();
+
+    private Datasource() {
+
+    }
+
+    //using singleton
+    public static Datasource getInstance() {
+        if(instance == null) {
+            instance = new Datasource();
+        }
+        return instance;
+    }
+
+
 
     public boolean open() {
         try {
@@ -127,6 +148,7 @@ public class Datasource {
             insertIntoSongs = connection.prepareStatement(INSERT_SONGS); //songs -> albums -> artists
             queryArtist = connection.prepareStatement(QUERY_ARTIST); //SELECT artists._id FROM artists  WHERE artists.name = ?;
             queryAlbum = connection.prepareStatement(QUERY_ALBUM); //SELECT albums._id FROM albums WHERE albums.name = ?
+            queryAlbumsByArtistId = connection.prepareStatement(QUERY_ALBUMS_BY_ARTIST_ID);
 
             return true;
         } catch (SQLException e) {
@@ -155,6 +177,9 @@ public class Datasource {
             if(insertIntoSongs != null) {
                 insertIntoSongs.close();
             }
+            if(queryAlbumsByArtistId != null) {
+                queryAlbumsByArtistId.close();
+            }
 
             if(connection != null) {
                 connection.close();
@@ -169,37 +194,34 @@ public class Datasource {
 
         StringBuilder sb = new StringBuilder("SELECT * FROM ");
         sb.append(TABLE_ARTISTS);
-        if(sortOrder != ORDER_BY_NONE) {
+        if (sortOrder != ORDER_BY_NONE) {
             sb.append(" ORDER BY ");
             sb.append(COLUMN_ARTIST_NAME);
             sb.append(" COLLATE NOCASE ");
-
-            if(sortOrder == ORDER_BY_DESC) {
-                sb.append("DESC"); //
+            if (sortOrder == ORDER_BY_DESC) {
+                sb.append("DESC");
             } else {
-                sb.append("ASC"); //
+                sb.append("ASC");
             }
         }
 
-
-        try( Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery(sb.toString()) ) {
+        try (Statement statement = connection.createStatement();
+             ResultSet results = statement.executeQuery(sb.toString())) {
 
             List<Artist> artists = new ArrayList<>();
-            while(results.next()) {
+            while (results.next()) {
                 Artist artist = new Artist();
                 artist.setId(results.getInt(INDEX_ARTIST_ID));
-                artist.setName(results.getString(INDEX_ARTIST_NAME ));
+                artist.setName(results.getString(INDEX_ARTIST_NAME));
                 artists.add(artist);
             }
 
             return artists;
 
         } catch (SQLException e) {
-            System.out.println("query failed: " + e.getMessage());
+            System.out.println("Query failed: " + e.getMessage());
             return null;
         }
-
     }
 
     public List<String> queryAlbumsForArtist(String artistName, int sortOrder) {
@@ -419,6 +441,7 @@ public class Datasource {
             }
 
         }
+
     }
 
 

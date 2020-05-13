@@ -1,41 +1,52 @@
 package com.patryk_prusko.model;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Song {
 
-    private int id;
-    private int track;
-    private String name; //title
-    private int albumId;
+    private SimpleIntegerProperty id;
+    private SimpleIntegerProperty track;
+    private SimpleStringProperty name; //title
+    private SimpleIntegerProperty albumId;
+
+    public Song(SimpleIntegerProperty id, SimpleIntegerProperty track, SimpleStringProperty name, SimpleIntegerProperty albumId) {
+
+        this.id = new SimpleIntegerProperty();
+        this.track = new SimpleIntegerProperty();
+        this.name = new SimpleStringProperty();
+        this.albumId = new SimpleIntegerProperty();
+    }
 
     public int getId() {
-        return id;
+        return id.get();
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id.set(id);
     }
 
     public int getTrack() {
-        return track;
+        return track.get();
     }
 
     public void setTrack(int track) {
-        this.track = track;
+        this.track.set(track);
     }
 
     public String getName() {
-        return name;
+        return name.get();
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name.set(name);
     }
 
     public int getAlbumId() {
-        return albumId;
+        return albumId.get();
     }
 
     public void setAlbumId(int albumId) {
-        this.albumId = albumId;
+        this.albumId.set(albumId);
     }
 }
