@@ -10,7 +10,7 @@ public class Album {
     private SimpleIntegerProperty artistId;
 
 
-    public Album(SimpleIntegerProperty id, SimpleStringProperty name, SimpleIntegerProperty artistId) {
+    public Album() {
         this.id = new SimpleIntegerProperty();
         this.name = new SimpleStringProperty();
         this.artistId = new SimpleIntegerProperty();

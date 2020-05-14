@@ -10,8 +10,7 @@ public class Song {
     private SimpleStringProperty name; //title
     private SimpleIntegerProperty albumId;
 
-    public Song(SimpleIntegerProperty id, SimpleIntegerProperty track, SimpleStringProperty name, SimpleIntegerProperty albumId) {
-
+    public Song() {
         this.id = new SimpleIntegerProperty();
         this.track = new SimpleIntegerProperty();
         this.name = new SimpleStringProperty();

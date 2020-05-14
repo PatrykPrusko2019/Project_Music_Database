@@ -224,6 +224,29 @@ public class Datasource {
         }
     }
 
+    public List<Album> queryAlbumsForArtistId(int id) {
+        try {
+            queryAlbumsByArtistId.setInt(1, id);
+            ResultSet results = queryAlbumsByArtistId.executeQuery();
+
+            List<Album> albums = new ArrayList<>();
+            while(results.next()) {
+                Album album = new Album();
+                album.setId(results.getInt(1));
+                album.setName(results.getString(2));
+                album.setArtistId(id);
+                albums.add(album);
+            }
+
+            return albums;
+
+        } catch (SQLException e) {
+            System.out.println("Query failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+
     public List<String> queryAlbumsForArtist(String artistName, int sortOrder) {
         //SELECT albums.name FROM albums INNER JOIN artists ON albums.artist = artists._id WHERE artists.name = "Iron Maiden" ORDER BY albums.name COLLATE NOCASE ASC
         StringBuilder sb = new StringBuilder(QUERY_ALBUMS_BY_ARTIST_START);
