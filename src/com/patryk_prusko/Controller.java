@@ -10,6 +10,8 @@ import javafx.scene.control.TableView;
 import com.patryk_prusko.model.Artist;
 import com.patryk_prusko.model.Datasource;
 
+import java.awt.*;
+
 public class Controller {
 
     @FXML
@@ -28,7 +30,7 @@ public class Controller {
         task.setOnSucceeded(e -> progressBar.setVisible(false));
         task.setOnFailed(w -> progressBar.setVisible(false));
 
-        new Thread(task).start(); //start clas Task
+        new Thread(task).start();
     }
 
     @FXML
@@ -48,6 +50,32 @@ public class Controller {
 
         new Thread(task).start();
     }
+
+    @FXML
+    public void updateArtist() {
+        // final Artist artist = (Artist) artistTable.getSelectionModel().getSelectedItem();
+          final Artist artist = (Artist) artistTable.getItems().get(2);
+
+        Task<Boolean> task = new Task<Boolean>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return Datasource.getInstance().updateArtistName(artist.getId(), "AC/DC");
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            TextArea textArea = new TextArea();
+            if(task.valueProperty().get()) {
+                artist.setName("Test");
+                artistTable.refresh();
+            }
+        });
+
+        new Thread(task).start();
+
+
+    }
+
 
 }
 

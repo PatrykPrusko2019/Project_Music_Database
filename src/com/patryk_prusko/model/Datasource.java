@@ -1,6 +1,9 @@
 package com.patryk_prusko.model;
 
 
+import javafx.scene.layout.VBox;
+
+import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +17,6 @@ public class Datasource {
     public static final String COLUMN_ALBUM_ID = "_id";
     public static final String COLUMN_ALBUM_NAME = "name";
     public static final String COLUMN_ALBUM_ARTIST = "artist";
-    public static final int INDEX_ALBUM_ID = 1;
-    public static final int INDEX_ALBUM_NAME = 2;
-    public static final int INDEX_ALBUM_ARTIST = 3;
 
     public static final String TABLE_ARTISTS = "artists";
     public static final String COLUMN_ARTIST_ID = "_id";
@@ -29,10 +29,6 @@ public class Datasource {
     public static final String COLUMN_SONG_TRACK = "track";
     public static final String COLUMN_SONG_TITLE = "title";
     public static final String COLUMN_SONG_ALBUM = "album";
-    public static final int INDEX_SONG_ID = 1;
-    public static final int INDEX_SONG_TRACK = 2;
-    public static final int INDEX_SONG_TITLE = 3;
-    public static final int INDEX_SONG_ALBUM = 4;
 
     public static final int ORDER_BY_NONE = 1;
     public static final int ORDER_BY_ASC = 2;
@@ -111,6 +107,10 @@ public class Datasource {
     public static final String QUERY_ALBUMS_BY_ARTIST_ID = "SELECT * FROM " + TABLE_ALBUMS +
             " WHERE " + COLUMN_ALBUM_ARTIST + " = ? ORDER BY " + COLUMN_ALBUM_NAME + " COLLATE NOCASE "; // SELECT * FROM albums WHERE albums.artist = ? ORDER BY albums.name COLLATE NOCASE
 
+    public static final String UPDATE_ARTIST_NAME = "UPDATE " + TABLE_ARTISTS + " SET " +
+            COLUMN_ARTIST_NAME + " = ? WHERE " + COLUMN_ARTIST_ID + " = ?";
+
+
     private Connection connection;
 
     private PreparedStatement querySongInfoView;
@@ -122,6 +122,7 @@ public class Datasource {
     private PreparedStatement queryArtist;
     private PreparedStatement queryAlbum;
     private PreparedStatement queryAlbumsByArtistId;
+    private PreparedStatement updateArtistName;
 
     private static Datasource instance = new Datasource();
 
@@ -149,6 +150,8 @@ public class Datasource {
             queryArtist = connection.prepareStatement(QUERY_ARTIST); //SELECT artists._id FROM artists  WHERE artists.name = ?;
             queryAlbum = connection.prepareStatement(QUERY_ALBUM); //SELECT albums._id FROM albums WHERE albums.name = ?
             queryAlbumsByArtistId = connection.prepareStatement(QUERY_ALBUMS_BY_ARTIST_ID);
+            updateArtistName = connection.prepareStatement(UPDATE_ARTIST_NAME);
+
 
             return true;
         } catch (SQLException e) {
@@ -180,6 +183,10 @@ public class Datasource {
             if(queryAlbumsByArtistId != null) {
                 queryAlbumsByArtistId.close();
             }
+            if(updateArtistName != null) {
+                updateArtistName.close();
+            }
+            //UPDATE artists SET name = ? WHERE id = ?
 
             if(connection != null) {
                 connection.close();
@@ -429,6 +436,19 @@ public class Datasource {
             } else {
                 throw new SQLException("Couldn't get _id for album");
             }
+        }
+    }
+
+    public boolean updateArtistName(int id, String newName) {
+        try {
+            updateArtistName.setString(1, newName);
+            updateArtistName.setInt(2, id);
+            int affectedRecords = updateArtistName.executeUpdate();
+
+            return affectedRecords == 1;
+        } catch (SQLException e) {
+            System.out.println("Update failed: " + e.getMessage());
+            return false;
         }
     }
 
