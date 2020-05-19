@@ -1,9 +1,5 @@
 package com.patryk_prusko.model;
 
-
-import javafx.scene.layout.VBox;
-
-import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,7 +192,7 @@ public class Datasource {
         }
     }
 
-    //ask to artists
+
     public List<Artist> queryArtists(int sortOrder) {
 
         StringBuilder sb = new StringBuilder("SELECT * FROM ");
@@ -318,13 +314,7 @@ public class Datasource {
             ResultSet results = statement.executeQuery(sb.toString())) {
 
             List<SongArtist> songArtists = new ArrayList<>();
-            while(results.next()) {
-                SongArtist songArtist = new SongArtist();
-                songArtist.setArtistName(results.getString(1));
-                songArtist.setAlbumName(results.getString(2));
-                songArtist.setTrack(results.getInt(3));
-                songArtists.add(songArtist);
-            }
+            songArtists = returnListSongArtists(songArtists, results);
 
             return songArtists;
 
@@ -332,6 +322,17 @@ public class Datasource {
             System.out.println("Query failed: " + e.getMessage());
             return null;
         }
+    }
+
+    private List<SongArtist> returnListSongArtists(List<SongArtist> songArtists, ResultSet results) throws SQLException {
+        while(results.next()) {
+            SongArtist songArtist = new SongArtist();
+            songArtist.setArtistName(results.getString(1));
+            songArtist.setAlbumName(results.getString(2));
+            songArtist.setTrack(results.getInt(3));
+            songArtists.add(songArtist);
+        }
+        return songArtists;
     }
 
     public int getCount(String table) {
@@ -372,13 +373,7 @@ public class Datasource {
             ResultSet results = querySongInfoView.executeQuery();
 
             List<SongArtist> songArtists = new ArrayList<>();
-            while (results.next()) {
-                SongArtist songArtist = new SongArtist();
-                songArtist.setArtistName(results.getString(1));
-                songArtist.setAlbumName(results.getString(2));
-                songArtist.setTrack(results.getInt(3));
-                songArtists.add(songArtist);
-            }
+            songArtists = returnListSongArtists(songArtists, results);
 
             return songArtists;
 

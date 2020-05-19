@@ -8,7 +8,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.patryk_prusko.model.Datasource;
 
-/** class Main */
+/** class Main
+ *
+ The program displays all artists by name, you can search for given albums by artist
+ and change the test name of the artist AC DC -> AC DC test
+ * */
 public class Start extends Application {
 
     @Override
